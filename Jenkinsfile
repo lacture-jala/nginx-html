@@ -18,5 +18,27 @@ pipeline{
                 '''
             }
         }
+         stage('build'){
+            steps{
+                sh '''
+                docker build -t ${ECR_REPO_NAME} .
+                '''
+            }
+        }
+         stage('Tagging the image'){
+            steps{
+                sh '''
+                docker tag ${ECR_REPO_NAME}:latest ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO_NAME}:${IMAGE_TAG}
+                docker push 156172784305.dkr.ecr.ap-south-1.amazonaws.com/acr-repo:latest
+                '''
+            }
+        }
+        stage('push image to ecr'){
+            steps{
+                sh '''
+                docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO_NAME}:${IMAGE_TAG}
+                '''
+            }
+        }
     }
 }
