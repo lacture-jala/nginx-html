@@ -2,7 +2,7 @@
 FROM nginx:latest
 
 # Copy static website content to the Nginx server's default directory
-COPY ./html /usr/share/nginx/html
+COPY . /usr/share/nginx/html
 
 # Expose port 80 so that the container can serve the website
 EXPOSE 80
