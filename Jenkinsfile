@@ -11,6 +11,11 @@ pipeline{
     }
 
     stages{
+         stage('Checkout Code') {
+            steps {
+                checkout scm
+            }
+        }
          stage('login'){
             steps{
                 sh '''
