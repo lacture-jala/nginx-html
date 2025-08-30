@@ -6,7 +6,7 @@ pipeline{
         ECR_REPO_NAME = 'acr-repo'
         IMAGE_TAG = 'latest'  // You can dynamically set the build version
         ECR_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO_NAME}:${IMAGE_TAG}"
-        EC2_INSTANCE_IP = '13.201.48.62'
+        EC2_INSTANCE_IP = '65.0.184.220'
         EC2_USER = 'ubuntu'
     }
 
