@@ -45,9 +45,17 @@ pipeline{
             }
         }
 
-        
+         stage('Run Docker Container') {
+            steps {
+                sh '''
+                docker pull ${ECR_URI}
+                docker stop app || true && docker rm app || true
+                docker run -d --name app -p 8000:80 ${ECR_URI}
+                '''
+            }
+        }
 
-        post {
+        post{
             success {
                 mail to: "${EMAIL}",
                     subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) succeeded",
