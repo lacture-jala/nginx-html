@@ -45,10 +45,20 @@ pipeline{
                 '''
             }
         }
-         stage('Trigger deploy Pipeline') {
-            steps {
-                build job: 'deploy'
-            }
-        }
+        //  stage('Trigger deploy Pipeline') {
+        //     steps {
+        //         timeout(time: 1, unit: 'MINUTES') {
+        //             build job: 'deploy', wait: true
+        //         }
+        //     }
+        //     post {
+        //         success {
+        //             echo 'Deploy job completed successfully.'
+        //         }
+        //         failure {
+        //             echo 'Deploy job failed.'
+        //         }
+        //     }
+        // }
     }
 }
