@@ -6,8 +6,7 @@ pipeline{
         ECR_REPO_NAME = 'acr-repo'
         IMAGE_TAG = 'latest'  // You can dynamically set the build version
         ECR_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO_NAME}:${IMAGE_TAG}"
-        EC2_INSTANCE_IP = '13.233.190.96'
-        EC2_USER = 'ubuntu'
+        EMAIL ="shiva.u.awsdevops@gmail.com"
     }
 
     stages{
@@ -45,20 +44,28 @@ pipeline{
                 '''
             }
         }
-        //  stage('Trigger deploy Pipeline') {
-        //     steps {
-        //         timeout(time: 1, unit: 'MINUTES') {
-        //             build job: 'deploy', wait: true
-        //         }
-        //     }
-        //     post {
-        //         success {
-        //             echo 'Deploy job completed successfully.'
-        //         }
-        //         failure {
-        //             echo 'Deploy job failed.'
-        //         }
-        //     }
-        // }
+
+         stage('Run Docker Container') {
+            steps {
+                sh '''
+                docker pull ${ECR_URI}
+                docker stop app || true && docker rm app || true
+                docker run -d --name app -p 8000:80 ${ECR_URI}
+                '''
+            }
+        }
+
+        post {
+            success {
+                mail to: "${EMAIL}",
+                    subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) succeeded",
+                    body: "Good news! The build succeeded."
+            }
+            failure {
+                mail to: "${EMAIL}",
+                    subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) failed",
+                    body: "Unfortunately, the build failed. Please check the logs."
+            }
+        }
     }
 }
