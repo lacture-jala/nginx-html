@@ -52,16 +52,25 @@ pipeline {
             }
         }
 
-        stage('Run Docker Container') {
-            steps {
-                sh '''
+      stage('Run Docker Container') {
+        steps {
+            sh '''
+                # Remove all existing Docker images
+                docker rmi -f $(docker images -q) || true
+                
+                # Pull the latest image from ECR
                 docker pull $ECR_URI
+                
+                # Stop and remove existing container named 'app'
                 docker stop app || true
                 docker rm app || true
+                
+                # Run the container
                 docker run -d --name app -p 8000:80 $ECR_URI
-                '''
-            }
+            '''
         }
+}
+
     }
 
     post {
